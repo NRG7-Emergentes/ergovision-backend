@@ -9,10 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * Implementation of PostureSettingQueryService.
- * Handles query operations for posture settings.
- */
 @Service
 public class PostureSettingQueryServiceImpl implements PostureSettingQueryService {
     

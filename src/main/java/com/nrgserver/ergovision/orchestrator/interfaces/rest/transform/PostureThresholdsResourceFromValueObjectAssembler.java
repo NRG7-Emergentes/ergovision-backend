@@ -3,10 +3,6 @@ package com.nrgserver.ergovision.orchestrator.interfaces.rest.transform;
 import com.nrgserver.ergovision.orchestrator.domain.model.valueobjects.PostureThresholds;
 import com.nrgserver.ergovision.orchestrator.interfaces.rest.resources.PostureThresholdsResource;
 
-/**
- * Transformer: PostureThresholdsResourceFromValueObjectAssembler
- * Converts PostureThresholds value object to PostureThresholdsResource.
- */
 public class PostureThresholdsResourceFromValueObjectAssembler {
     
     public static PostureThresholdsResource toResourceFromValueObject(PostureThresholds valueObject) {

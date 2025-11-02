@@ -9,10 +9,6 @@ import com.nrgserver.ergovision.orchestrator.infrastructure.persistence.jpa.repo
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implementation of AlertsSettingCommandService.
- * Handles command operations for alert settings.
- */
 @Service
 public class AlertsSettingCommandServiceImpl implements AlertsSettingCommandService {
     
@@ -25,7 +21,6 @@ public class AlertsSettingCommandServiceImpl implements AlertsSettingCommandServ
     @Override
     @Transactional
     public Long handle(CreateAlertsSettingCommand command) {
-        // Check if user already has alert settings
         if (alertSettingRepository.existsByUserId(command.userId())) {
             throw new IllegalArgumentException("Alert settings already exist for user: " + command.userId());
         }

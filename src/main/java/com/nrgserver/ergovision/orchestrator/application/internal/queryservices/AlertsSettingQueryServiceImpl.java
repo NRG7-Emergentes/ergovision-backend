@@ -9,10 +9,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * Implementation of AlertsSettingQueryService.
- * Handles query operations for alert settings.
- */
 @Service
 public class AlertsSettingQueryServiceImpl implements AlertsSettingQueryService {
     

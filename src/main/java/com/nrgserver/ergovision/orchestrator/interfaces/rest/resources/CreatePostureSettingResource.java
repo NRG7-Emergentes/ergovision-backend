@@ -5,10 +5,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * Resource: CreatePostureSettingResource
- * Request body for creating posture settings.
- */
 public record CreatePostureSettingResource(
         @NotNull(message = "User ID is required")
         Long userId,

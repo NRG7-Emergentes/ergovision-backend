@@ -9,10 +9,6 @@ import com.nrgserver.ergovision.orchestrator.infrastructure.persistence.jpa.repo
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Implementation of PostureSettingCommandService.
- * Handles command operations for posture settings.
- */
 @Service
 public class PostureSettingCommandServiceImpl implements PostureSettingCommandService {
     
@@ -25,7 +21,6 @@ public class PostureSettingCommandServiceImpl implements PostureSettingCommandSe
     @Override
     @Transactional
     public Long handle(CreatePostureSettingCommand command) {
-        // Check if user already has posture settings
         if (postureSettingRepository.existsByUserId(command.userId())) {
             throw new IllegalArgumentException("Posture settings already exist for user: " + command.userId());
         }

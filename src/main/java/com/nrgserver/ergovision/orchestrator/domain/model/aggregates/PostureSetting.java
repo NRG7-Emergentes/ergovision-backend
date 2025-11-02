@@ -5,10 +5,6 @@ import com.nrgserver.ergovision.shared.domain.model.aggregates.AuditableAbstract
 import jakarta.persistence.*;
 import lombok.Getter;
 
-/**
- * Aggregate: PostureSetting
- * Configures posture detection parameters.
- */
 @Entity
 @Getter
 public class PostureSetting extends AuditableAbstractAggregateRoot<PostureSetting> {
@@ -35,7 +31,6 @@ public class PostureSetting extends AuditableAbstractAggregateRoot<PostureSettin
     private PostureThresholds postureThresholds;
     
     protected PostureSetting() {
-        // Required by JPA
     }
     
     public PostureSetting(Long userId) {
@@ -64,56 +59,30 @@ public class PostureSetting extends AuditableAbstractAggregateRoot<PostureSettin
         }
     }
     
-    /**
-     * Adjusts the detection sensitivity.
-     * @param level The sensitivity level (0-100)
-     */
     public void adjustSensitivity(Integer level) {
         this.postureSensitivity = validateSensitivity(level);
     }
     
-    /**
-     * Sets shoulder angle threshold.
-     * @param angle The threshold angle in degrees
-     */
     public void setShoulderThreshold(Integer angle) {
         this.shoulderAngleThreshold = validateAngleThreshold(angle, "Shoulder");
     }
     
-    /**
-     * Sets head angle threshold.
-     * @param angle The threshold angle in degrees
-     */
     public void setHeadThreshold(Integer angle) {
         this.headAngleThreshold = validateAngleThreshold(angle, "Head");
     }
     
-    /**
-     * Sets sampling frequency.
-     * @param freq The sampling frequency in seconds
-     */
     public void setSamplingFrequency(Integer freq) {
         this.samplingFrequency = validateSamplingFrequency(freq);
     }
     
-    /**
-     * Toggles skeleton visibility.
-     */
     public void toggleSkeletonVisibility() {
         this.showSkeleton = !this.showSkeleton;
     }
     
-    /**
-     * Updates skeleton visibility.
-     * @param visible Whether skeleton should be visible
-     */
     public void setSkeletonVisibility(Boolean visible) {
         this.showSkeleton = visible;
     }
     
-    /**
-     * Updates all posture settings.
-     */
     public void updateSettings(Integer postureSensitivity, Integer shoulderAngleThreshold,
                               Integer headAngleThreshold, Integer samplingFrequency, 
                               Boolean showSkeleton, PostureThresholds postureThresholds) {

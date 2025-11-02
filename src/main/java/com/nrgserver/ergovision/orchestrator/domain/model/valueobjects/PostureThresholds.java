@@ -5,10 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-/**
- * Value Object: PostureThresholds
- * Defines angular thresholds for posture detection.
- */
 @Embeddable
 @Getter
 @NoArgsConstructor
@@ -20,10 +16,6 @@ public class PostureThresholds {
     private Integer backAngle;
     private Integer headTilt;
     
-    /**
-     * Validates that all threshold values are within acceptable ranges (0-180 degrees)
-     * @return true if all values are valid, false otherwise
-     */
     public boolean isValid() {
         return isAngleValid(shoulderAngle) && 
                isAngleValid(neckAngle) && 

@@ -5,10 +5,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * Resource: UpdatePostureSettingResource
- * Request body for updating posture settings.
- */
 public record UpdatePostureSettingResource(
         @NotNull(message = "Posture sensitivity is required")
         @Min(value = 0, message = "Posture sensitivity must be between 0 and 100")

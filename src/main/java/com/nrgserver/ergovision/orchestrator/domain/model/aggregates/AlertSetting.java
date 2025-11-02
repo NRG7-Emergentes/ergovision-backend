@@ -4,10 +4,6 @@ import com.nrgserver.ergovision.shared.domain.model.aggregates.AuditableAbstract
 import jakarta.persistence.*;
 import lombok.Getter;
 
-/**
- * Aggregate: AlertSetting
- * Manages alert configuration for monitoring.
- */
 @Entity
 @Getter
 public class AlertSetting extends AuditableAbstractAggregateRoot<AlertSetting> {
@@ -28,7 +24,6 @@ public class AlertSetting extends AuditableAbstractAggregateRoot<AlertSetting> {
     private Integer alertInterval;
     
     protected AlertSetting() {
-        // Required by JPA
     }
     
     public AlertSetting(Long userId) {
@@ -48,57 +43,30 @@ public class AlertSetting extends AuditableAbstractAggregateRoot<AlertSetting> {
         this.alertInterval = validateInterval(alertInterval);
     }
     
-    /**
-     * Enables visual alerts.
-     */
     public void enableVisualAlerts() {
         this.visualAlertsEnabled = true;
     }
     
-    /**
-     * Disables visual alerts.
-     */
     public void disableVisualAlerts() {
         this.visualAlertsEnabled = false;
     }
     
-    /**
-     * Enables sound alerts.
-     */
     public void enableSoundAlerts() {
         this.soundAlertsEnabled = true;
     }
     
-    /**
-     * Disables sound alerts.
-     */
     public void disableSoundAlerts() {
         this.soundAlertsEnabled = false;
     }
     
-    /**
-     * Adjusts the volume (0-100).
-     * @param volume The new volume level
-     */
     public void adjustVolume(Integer volume) {
         this.alertVolume = validateVolume(volume);
     }
     
-    /**
-     * Sets the alert interval.
-     * @param interval The interval between alerts in seconds
-     */
     public void setAlertInterval(Integer interval) {
         this.alertInterval = validateInterval(interval);
     }
     
-    /**
-     * Updates all alert settings.
-     * @param visualAlertsEnabled Whether visual alerts are enabled
-     * @param soundAlertsEnabled Whether sound alerts are enabled
-     * @param alertVolume The alert volume (0-100)
-     * @param alertInterval The interval between alerts in seconds
-     */
     public void updateSettings(Boolean visualAlertsEnabled, Boolean soundAlertsEnabled, 
                               Integer alertVolume, Integer alertInterval) {
         this.visualAlertsEnabled = visualAlertsEnabled;

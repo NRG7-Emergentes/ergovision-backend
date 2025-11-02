@@ -3,10 +3,6 @@ package com.nrgserver.ergovision.orchestrator.interfaces.rest.transform;
 import com.nrgserver.ergovision.orchestrator.domain.model.aggregates.PostureSetting;
 import com.nrgserver.ergovision.orchestrator.interfaces.rest.resources.PostureSettingResource;
 
-/**
- * Transformer: PostureSettingResourceFromEntityAssembler
- * Converts PostureSetting entity to PostureSettingResource.
- */
 public class PostureSettingResourceFromEntityAssembler {
     
     public static PostureSettingResource toResourceFromEntity(PostureSetting entity) {

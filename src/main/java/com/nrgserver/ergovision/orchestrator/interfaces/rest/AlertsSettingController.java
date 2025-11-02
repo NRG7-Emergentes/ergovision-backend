@@ -20,10 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Controller: AlertsSettingController
- * REST controller for managing alert settings.
- */
 @RestController
 @RequestMapping("/api/v1/orchestrator/alerts-settings")
 @Tag(name = "Alert Settings", description = "Alert Settings Management Endpoints")

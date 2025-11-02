@@ -4,10 +4,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * Resource: CreateAlertSettingResource
- * Request body for creating alert settings.
- */
 public record CreateAlertSettingResource(
         @NotNull(message = "User ID is required")
         Long userId,

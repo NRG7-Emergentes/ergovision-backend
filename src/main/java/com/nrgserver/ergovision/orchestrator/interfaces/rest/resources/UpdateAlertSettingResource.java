@@ -4,10 +4,6 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 
-/**
- * Resource: UpdateAlertSettingResource
- * Request body for updating alert settings.
- */
 public record UpdateAlertSettingResource(
         @NotNull(message = "Visual alerts enabled flag is required")
         Boolean visualAlertsEnabled,

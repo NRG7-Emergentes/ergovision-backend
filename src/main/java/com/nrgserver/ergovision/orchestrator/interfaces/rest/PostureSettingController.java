@@ -20,10 +20,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Controller: PostureSettingController
- * REST controller for managing posture settings.
- */
 @RestController
 @RequestMapping("/api/v1/orchestrator/posture-settings")
 @Tag(name = "Posture Settings", description = "Posture Settings Management Endpoints")
