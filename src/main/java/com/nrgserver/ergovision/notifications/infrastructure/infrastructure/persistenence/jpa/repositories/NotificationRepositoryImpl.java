@@ -101,7 +101,6 @@ public class NotificationRepositoryImpl {
         if (val instanceof java.time.LocalDate) {
             return ((java.time.LocalDate) val).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli();
         }
-        if (val instanceof java.sql.Timestamp) return ((java.sql.Timestamp) val).getTime();
         return Long.MIN_VALUE;
     }
 }
