@@ -9,53 +9,65 @@ import lombok.Setter;
 import java.time.Instant;
 import java.util.Objects;
 
+/**
+ * Aggregate Root: Notification
+ * Representa una notificación dirigida a un usuario.
+ */
 @Getter
 public class Notification {
-    // Explicit getters used by the assembler (typed)
-    // fields (adjusted)
+    // === Core attributes ===
     private Long id;
     private Long userId;
     private String title;
     private String message;
     private NotificationType type;
     private NotificationStatus status;
-    // explicit setter for channel (avoid Lombok)
-    // allow changing channel when preferences require it
+
+    // === Value Objects ===
     @Setter
     private DeliveryChannel channel;
-    // timestamps as Instants (explicit)
+
+    // === Metadata ===
     private Instant createdAt;
     private Instant readAt;
 
-    private Notification() {
-        // for factory
-    }
+    // Constructor privado (factory pattern)
+    private Notification() {}
 
-    public static Notification create(Long id, Long userId, String title, String message, NotificationType type, DeliveryChannel channel) {
+    /**
+     * Fábrica de notificaciones: asegura consistencia al crearlas.
+     */
+    public static Notification create(Long id, Long userId, String title, String message,
+                                      NotificationType type, DeliveryChannel channel) {
         Notification n = new Notification();
-        n.id = id;
-        n.userId = userId;
-        n.title = title;
-        n.message = message;
-        n.type = type;
-        n.channel = channel;
+        n.id = (id != null) ? id : System.currentTimeMillis(); // fallback simple
+        n.userId = Objects.requireNonNull(userId, "UserId cannot be null");
+        n.title = Objects.requireNonNullElse(title, "Untitled Notification");
+        n.message = Objects.requireNonNullElse(message, "");
+        n.type = (type != null) ? type : NotificationType.INFO;
+        n.channel = (channel != null) ? channel : DeliveryChannel.PUSH;
         n.createdAt = Instant.now();
         n.status = NotificationStatus.PENDING;
         return n;
     }
 
+    /**
+     * Lógica de envío de la notificación.
+     * (En la capa de infraestructura se implementaría el envío real)
+     */
     public void send() {
-        // Regla simple de dominio: título y tipo deben existir para intentar envío.
         if (Objects.isNull(type) || title == null || title.trim().isEmpty()) {
-            this.status = NotificationStatus.FAILED;
+            markFailed();
             return;
         }
-        // Simulación de envío: en la capa de infraestructura se haría el envío real.
         this.status = NotificationStatus.SENT;
-        // optionally record a sent timestamp if needed (not required by assembler)
     }
 
+    /**
+     * Marca la notificación como leída.
+     */
     public void markAsRead() {
+        if (this.status == NotificationStatus.READ) return; // idempotente
         this.status = NotificationStatus.READ;
         this.readAt = Instant.now();
     }
@@ -64,16 +76,24 @@ public class Notification {
         return this.status == NotificationStatus.READ;
     }
 
+    /**
+     * Permite reenviar una notificación.
+     * Solo puede reenviarse si previamente falló o ya fue enviada.
+     */
     public void resend() {
-        if (this.status != NotificationStatus.FAILED) {
-            throw new IllegalStateException("Only FAILED notifications can be resent");
+        if (this.status != NotificationStatus.FAILED && this.status != NotificationStatus.SENT) {
+            throw new IllegalStateException(
+                    "Notification cannot be resent from current state: " + this.status
+            );
         }
         this.status = NotificationStatus.PENDING;
         send();
     }
 
+    /**
+     * Marca la notificación como fallida.
+     */
     public void markFailed() {
         this.status = NotificationStatus.FAILED;
     }
-
 }
