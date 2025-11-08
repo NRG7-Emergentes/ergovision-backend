@@ -3,8 +3,11 @@ package com.nrgserver.ergovision.notifications.domain.model.aggregates;
 import com.nrgserver.ergovision.notifications.domain.model.valueobjects.DeliveryChannel;
 import com.nrgserver.ergovision.notifications.domain.model.valueobjects.NotificationStatus;
 import com.nrgserver.ergovision.notifications.domain.model.valueobjects.NotificationType;
+import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 import java.util.Objects;
@@ -14,58 +17,81 @@ import java.util.Objects;
  * Representa una notificación dirigida a un usuario.
  */
 @Getter
+@Setter
+@NoArgsConstructor
+@Entity
+@Table(name = "notifications")
 public class Notification {
-    // === Core attributes ===
+
+    // === Identificador ===
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    // === Core attributes ===
+    @Column(name = "user_id", nullable = false)
     private Long userId;
+
+    @Column(nullable = false)
     private String title;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
     private String message;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private NotificationType type;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private NotificationStatus status;
 
     // === Value Objects ===
-    @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private DeliveryChannel channel;
 
     // === Metadata ===
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
+
+    @Column(name = "read_at")
     private Instant readAt;
 
-    // Constructor privado (factory pattern)
-    private Notification() {}
+    @Column(name = "sent_at")
+    private Instant sentAt;
 
-    /**
-     * Fábrica de notificaciones: asegura consistencia al crearlas.
-     */
+    @Column(nullable = false)
+    private boolean success = false;
+
+    // === Factory Method ===
     public static Notification create(Long id, Long userId, String title, String message,
                                       NotificationType type, DeliveryChannel channel) {
         Notification n = new Notification();
-        n.id = (id != null) ? id : System.currentTimeMillis(); // fallback simple
+        n.id = id; // ✅ puede venir null
         n.userId = Objects.requireNonNull(userId, "UserId cannot be null");
         n.title = Objects.requireNonNullElse(title, "Untitled Notification");
         n.message = Objects.requireNonNullElse(message, "");
         n.type = (type != null) ? type : NotificationType.INFO;
         n.channel = (channel != null) ? channel : DeliveryChannel.PUSH;
-        n.createdAt = Instant.now();
         n.status = NotificationStatus.PENDING;
         return n;
     }
 
-    /**
-     * Lógica de envío de la notificación.
-     * (En la capa de infraestructura se implementaría el envío real)
-     */
+
+    // === Domain Behavior ===
+
     public void send() {
         if (Objects.isNull(type) || title == null || title.trim().isEmpty()) {
             markFailed();
             return;
         }
         this.status = NotificationStatus.SENT;
+        this.sentAt = Instant.now();
+        this.success = true;
     }
 
-    /**
-     * Marca la notificación como leída.
-     */
     public void markAsRead() {
         if (this.status == NotificationStatus.READ) return; // idempotente
         this.status = NotificationStatus.READ;
@@ -76,10 +102,6 @@ public class Notification {
         return this.status == NotificationStatus.READ;
     }
 
-    /**
-     * Permite reenviar una notificación.
-     * Solo puede reenviarse si previamente falló o ya fue enviada.
-     */
     public void resend() {
         if (this.status != NotificationStatus.FAILED && this.status != NotificationStatus.SENT) {
             throw new IllegalStateException(
@@ -90,10 +112,8 @@ public class Notification {
         send();
     }
 
-    /**
-     * Marca la notificación como fallida.
-     */
     public void markFailed() {
         this.status = NotificationStatus.FAILED;
+        this.success = false;
     }
 }
