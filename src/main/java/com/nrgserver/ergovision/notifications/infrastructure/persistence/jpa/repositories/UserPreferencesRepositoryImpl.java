@@ -1,4 +1,4 @@
-package com.nrgserver.ergovision.notifications.infrastructure.infrastructure.persistenence.jpa.repositories;
+package com.nrgserver.ergovision.notifications.infrastructure.persistence.jpa.repositories;
 
 import com.nrgserver.ergovision.notifications.domain.model.aggregates.UserPreferences;
 import org.springframework.stereotype.Repository;
