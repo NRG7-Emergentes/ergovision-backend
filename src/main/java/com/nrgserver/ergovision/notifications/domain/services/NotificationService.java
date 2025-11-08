@@ -2,7 +2,7 @@ package com.nrgserver.ergovision.notifications.domain.services;
 
 import com.nrgserver.ergovision.notifications.domain.model.aggregates.Notification;
 import com.nrgserver.ergovision.notifications.domain.model.aggregates.UserPreferences;
-import com.nrgserver.ergovision.notifications.infrastructure.infrastructure.persistenence.jpa.repositories.NotificationRepository;
+import com.nrgserver.ergovision.notifications.infrastructure.persistence.jpa.repositories.NotificationRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
