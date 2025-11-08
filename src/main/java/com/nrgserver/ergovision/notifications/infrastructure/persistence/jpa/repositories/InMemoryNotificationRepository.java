@@ -1,4 +1,4 @@
-package com.nrgserver.ergovision.notifications.infrastructure.infrastructure.persistenence.jpa.repositories;
+package com.nrgserver.ergovision.notifications.infrastructure.persistence.jpa.repositories;
 
 import com.nrgserver.ergovision.notifications.domain.model.aggregates.Notification;
 
@@ -58,17 +58,16 @@ public class InMemoryNotificationRepository {
     }
 
     private static long toMillis(Object val) {
-        if (val == null) return Long.MIN_VALUE;
-        if (val instanceof Long) return (Long) val;
-        if (val instanceof Number) return ((Number) val).longValue();
-        if (val instanceof java.util.Date) return ((java.util.Date) val).getTime();
-        if (val instanceof java.time.Instant) return ((java.time.Instant) val).toEpochMilli();
-        if (val instanceof java.time.LocalDateTime) {
-            return ((java.time.LocalDateTime) val).toInstant(java.time.ZoneOffset.UTC).toEpochMilli();
-        }
-        if (val instanceof java.time.LocalDate) {
-            return ((java.time.LocalDate) val).atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli();
-        }
-        return Long.MIN_VALUE;
+        return switch (val) {
+            case Long l -> l;
+            case Number number -> number.longValue();
+            case Date date -> date.getTime();
+            case java.time.Instant instant -> instant.toEpochMilli();
+            case java.time.LocalDateTime localDateTime ->
+                    localDateTime.toInstant(java.time.ZoneOffset.UTC).toEpochMilli();
+            case java.time.LocalDate localDate ->
+                    localDate.atStartOfDay(java.time.ZoneOffset.UTC).toInstant().toEpochMilli();
+            case null, default -> Long.MIN_VALUE;
+        };
     }
 }
