@@ -9,7 +9,6 @@ import java.util.Optional;
 
 public interface MonitoringSessionCommandService {
     Long handle(CreateMonitoringSessionCommand command);
-    Long handle(CreateMonitoringSessionCompletedCommand command);
     Optional<MonitoringSession> handle(UpdateMonitoringSessionCommand command);
     void handle(DeleteMonitoringSessionCommand command);
 
