@@ -14,6 +14,7 @@ public class NotificationWebSocketController {
         this.messagingTemplate = messagingTemplate;
     }
 
+    // Connect from Flutter emulator at: http://10.0.2.2:8080/ws
     // 👇 Para recibir mensajes desde el frontend (si los necesitas)
     @MessageMapping("/notify")
     public void receiveNotification(Notification notification) {
@@ -22,8 +23,13 @@ public class NotificationWebSocketController {
         messagingTemplate.convertAndSend("/topic/notifications", notification);
     }
 
-    // 👇 Método que puedes llamar desde tus command services
+    // 👇 Método que puedes llamar desde tus command services para broadcast
     public void sendNotification(Notification notification) {
         messagingTemplate.convertAndSend("/topic/notifications", notification);
+    }
+
+    // 👇 Nuevo: enviar notificación a un usuario concreto (destino /user/{user}/queue/notifications)
+    public void sendNotificationToUser(Notification notification, String userId) {
+        messagingTemplate.convertAndSendToUser(userId, "/queue/notifications", notification);
     }
 }
