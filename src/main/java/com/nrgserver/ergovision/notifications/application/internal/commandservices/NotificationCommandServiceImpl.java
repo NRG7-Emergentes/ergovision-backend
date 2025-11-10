@@ -69,6 +69,11 @@ public class NotificationCommandServiceImpl {
             );
 
             notificationService.sendNotification(n, up);
+
+            // <-- ADDED: apply domain action to mark/send the notification before persisting
+            n.send();
+
+            // persist the notification after sending
             notificationRepository.save(n);
 
             webSocketService.sendPrivateMessage(String.valueOf(cmd.userId()), n);
