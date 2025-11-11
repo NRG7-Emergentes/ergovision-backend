@@ -7,7 +7,13 @@ import java.util.List;
 public record SignUpCommand(
         String username,
         String password,
-        List<Roles> roles
+        List<Roles> roles,
+        String name,
+        String lastName,
+        Integer age,
+        Double height,
+        Double weight,
+        String imageUrl
 ) {
     public SignUpCommand {
         if (username==null||username.isBlank()) {

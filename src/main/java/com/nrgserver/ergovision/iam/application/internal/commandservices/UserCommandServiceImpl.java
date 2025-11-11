@@ -38,24 +38,31 @@ public class UserCommandServiceImpl implements UserCommandService {
         }
 
         //Check if a user with the same email already exists
-        var existingUserWithEmail = userRepository.findByUsername(updateUserCommand.username());
+       /* var existingUserWithEmail = userRepository.findByUsername(updateUserCommand.username());
         if (existingUserWithEmail.isPresent() && !existingUserWithEmail.get().getId().equals(userId)) {
             throw new IllegalArgumentException("User with username " + updateUserCommand.username() + " already exists");
-        }
+        }*/
 
         var userToUpdate = userOptional.get();
 
-        String encodedPassword = updateUserCommand.password();
+       /* String encodedPassword = updateUserCommand.password();
         if (encodedPassword != null && !encodedPassword.isBlank()) {
             encodedPassword = hashingService.encode(encodedPassword);
         } else {
             // Si viene vacía, mantén la actual
             encodedPassword = userToUpdate.getPassword();
-        }
+        }*/
 
         var commandWithEncodedPassword = new UpdateUserCommand(
-                updateUserCommand.username(),
-                encodedPassword
+                /*updateUserCommand.username(),
+                encodedPassword,*/
+                updateUserCommand.name(),
+                updateUserCommand.lastName(),
+                updateUserCommand.age(),
+                updateUserCommand.height(),
+                updateUserCommand.weight(),
+                updateUserCommand.imageUrl()
+
         );
 
         try{
@@ -104,7 +111,17 @@ public class UserCommandServiceImpl implements UserCommandService {
                 role->roleRepository.findByName(role)
                         .orElseThrow(() -> new IllegalArgumentException("Role " + role + " not found"))
                 ).toList();
-        var user = new User(signUpCommand.username(), hashingService.encode(signUpCommand.password()), roles);
+        var user = new User(
+                signUpCommand.username(),
+                hashingService.encode(signUpCommand.password()),
+                roles,
+                signUpCommand.name(),
+                signUpCommand.lastName(),
+                signUpCommand.age(),
+                signUpCommand.height(),
+                signUpCommand.weight(),
+                signUpCommand.imageUrl()
+        );
         userRepository.save(user);
         return userRepository.findByUsername(signUpCommand.username());
     }

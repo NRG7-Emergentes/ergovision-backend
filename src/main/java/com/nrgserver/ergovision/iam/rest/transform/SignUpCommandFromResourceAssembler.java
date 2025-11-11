@@ -9,7 +9,13 @@ public class SignUpCommandFromResourceAssembler {
         return new SignUpCommand(
                 signUpResource.username(),
                 signUpResource.password(),
-                signUpResource.roles()
+                signUpResource.roles(),
+                signUpResource.name(),
+                signUpResource.lastName(),
+                signUpResource.age(),
+                signUpResource.height(),
+                signUpResource.weight(),
+                signUpResource.imageUrl()
         );
     }
 }

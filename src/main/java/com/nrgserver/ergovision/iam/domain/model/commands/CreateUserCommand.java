@@ -8,7 +8,13 @@ import java.util.List;
 public record CreateUserCommand(
         String username,
         String password,
-        List<Role> roles
+        List<Role> roles,
+        String name,
+        String lastName,
+        Integer age,
+        Double height,
+        Double weight,
+        String imageUrl
 ) {
     public CreateUserCommand {
         if (username == null || username.isBlank()) {

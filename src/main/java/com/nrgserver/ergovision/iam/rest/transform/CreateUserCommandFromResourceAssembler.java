@@ -8,6 +8,13 @@ public class CreateUserCommandFromResourceAssembler {
         return new CreateUserCommand(
                 createUserResource.username(),
                 createUserResource.password(),
-                createUserResource.roles().stream().toList());
+                createUserResource.roles().stream().toList(),
+                createUserResource.name(),
+                createUserResource.lastName(),
+                createUserResource.age(),
+                createUserResource.height(),
+                createUserResource.weight(),
+                createUserResource.imageUrl()
+                );
     }
 }

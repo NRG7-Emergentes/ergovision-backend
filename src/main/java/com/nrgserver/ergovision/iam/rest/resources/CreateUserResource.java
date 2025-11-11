@@ -7,7 +7,13 @@ import java.util.Set;
 public record CreateUserResource(
         String username,
         String password,
-        Set<Role> roles
+        Set<Role> roles,
+        String name,
+        String lastName,
+        Integer age,
+        Double height,
+        Double weight,
+        String imageUrl
 ) {
     public CreateUserResource {
 

@@ -4,6 +4,8 @@ import com.nrgserver.ergovision.iam.domain.model.commands.UpdateUserCommand;
 import com.nrgserver.ergovision.iam.domain.model.entities.Role;
 import com.nrgserver.ergovision.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Positive;
 import lombok.Getter;
 
 import java.util.HashSet;
@@ -25,6 +27,19 @@ public class User extends AuditableAbstractAggregateRoot<User> {
     )
     private Set<Role> userRoles;
 
+    private String name;
+    private String lastName;
+
+    @Min(value = 0, message = "Age must be positive")
+    private Integer age;
+
+    @Positive(message = "Height must be positive")
+    private Double height;
+
+    @Positive(message = "Weight must be positive")
+    private Double weight;
+
+    private String imageUrl;
 
 
     protected User(){
@@ -42,12 +57,35 @@ public class User extends AuditableAbstractAggregateRoot<User> {
         this(username, password);
         addRoles(roles);
     }
+    public User(String username, String password, String name, String lastName,
+                Integer age, Double height, Double weight, String imageUrl) {
+        this(username, password);
+        this.name = name;
+        this.lastName = lastName;
+        this.age = age;
+        this.height = height;
+        this.weight = weight;
+        this.imageUrl = imageUrl;
+    }
+
+    public User(String username, String password, List<Role> roles,
+                String name, String lastName, Integer age, Double height,
+                Double weight, String imageUrl) {
+        this(username, password, name, lastName, age, height, weight, imageUrl);
+        addRoles(roles);
+    }
+
 
     //update
-    public User updateUserDetails(UpdateUserCommand updateUserCommand){
-        this.username = updateUserCommand.username();
-        this.password = updateUserCommand.password();
-
+    public User updateUserDetails(UpdateUserCommand updateUserCommand) {
+        /*this.username = updateUserCommand.username();
+        this.password = updateUserCommand.password();*/
+        this.name = updateUserCommand.name();
+        this.lastName = updateUserCommand.lastName();
+        this.age = updateUserCommand.age();
+        this.height = updateUserCommand.height();
+        this.weight = updateUserCommand.weight();
+        this.imageUrl = updateUserCommand.imageUrl();
         return this;
     }
 
