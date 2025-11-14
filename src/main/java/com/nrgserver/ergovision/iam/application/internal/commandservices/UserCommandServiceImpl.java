@@ -11,12 +11,10 @@ import com.nrgserver.ergovision.iam.domain.model.events.UserCreatedEvent;
 import com.nrgserver.ergovision.iam.domain.services.UserCommandService;
 import com.nrgserver.ergovision.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.nrgserver.ergovision.iam.infrastructure.persistence.jpa.repositories.UserRepository;
-import com.nrgserver.ergovision.orchestrator.domain.model.aggregates.PostureSetting;
-import com.nrgserver.ergovision.orchestrator.infrastructure.persistence.jpa.repositories.AlertSettingRepository;
-import com.nrgserver.ergovision.orchestrator.infrastructure.persistence.jpa.repositories.PostureSettingRepository;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -112,6 +110,7 @@ public class UserCommandServiceImpl implements UserCommandService {
     }
 
     @Override
+    @Transactional
     public Optional<User> handle(SignUpCommand signUpCommand) {
         if (userRepository.existsByUsername(signUpCommand.username())) {
             throw new IllegalArgumentException("User with user name " + signUpCommand.username() + " already exists");
@@ -133,7 +132,9 @@ public class UserCommandServiceImpl implements UserCommandService {
 
         var newUser = userRepository.findByUsername(signUpCommand.username());
 
-        eventPublisher.publishEvent(new UserCreatedEvent(newUser,newUser.get().getId()));
+        if (newUser.isPresent()) {
+            eventPublisher.publishEvent(new UserCreatedEvent(this, newUser.get().getId()));
+        }
 
         return newUser;
     }

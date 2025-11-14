@@ -1,7 +1,9 @@
 package com.nrgserver.ergovision.iam.domain.model.events;
 
+import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 
+@Getter
 public class UserCreatedEvent extends ApplicationEvent {
 
     private Long userId;
