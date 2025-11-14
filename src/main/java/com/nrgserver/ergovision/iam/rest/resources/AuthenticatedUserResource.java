@@ -5,6 +5,7 @@ import java.util.List;
 public record AuthenticatedUserResource(
         Long id,
         String username,
+        String imageUrl,
         String token,
         List<String> roles
 ) {
