@@ -55,6 +55,11 @@ public class UserCommandServiceImpl implements UserCommandService {
 
         var commandWithEncodedPassword = new UpdateUserCommand(
                 updateUserCommand.username(),
+                updateUserCommand.email(),
+                updateUserCommand.imageUrl(),
+                updateUserCommand.age(),
+                updateUserCommand.height(),
+                updateUserCommand.weight(),
                 encodedPassword
         );
 
@@ -104,7 +109,15 @@ public class UserCommandServiceImpl implements UserCommandService {
                 role->roleRepository.findByName(role)
                         .orElseThrow(() -> new IllegalArgumentException("Role " + role + " not found"))
                 ).toList();
-        var user = new User(signUpCommand.username(), hashingService.encode(signUpCommand.password()), roles);
+        var user = new User(
+                signUpCommand.username(),
+                signUpCommand.email(),
+                signUpCommand.imageUrl(),
+                signUpCommand.age(),
+                signUpCommand.height(),
+                signUpCommand.weight(),
+                hashingService.encode(signUpCommand.password()),
+                roles);
         userRepository.save(user);
         return userRepository.findByUsername(signUpCommand.username());
     }

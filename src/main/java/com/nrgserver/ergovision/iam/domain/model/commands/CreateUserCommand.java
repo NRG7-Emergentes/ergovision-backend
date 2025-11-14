@@ -7,6 +7,11 @@ import java.util.List;
 
 public record CreateUserCommand(
         String username,
+        String email,
+        String imageUrl,
+        Integer age,
+        Integer height,
+        Integer weight,
         String password,
         List<Role> roles
 ) {

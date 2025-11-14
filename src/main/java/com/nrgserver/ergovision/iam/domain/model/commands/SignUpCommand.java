@@ -6,6 +6,11 @@ import java.util.List;
 
 public record SignUpCommand(
         String username,
+        String email,
+        String imageUrl,
+        Integer age,
+        Integer height,
+        Integer weight,
         String password,
         List<Roles> roles
 ) {

@@ -8,5 +8,10 @@ import java.util.List;
 public record UserResource(
         Long id,
         String username,
+        String email,
+        String imageUrl,
+        Integer age,
+        Integer height,
+        Integer weight,
         List<Roles> roles
 ) { }

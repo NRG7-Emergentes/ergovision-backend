@@ -2,6 +2,11 @@ package com.nrgserver.ergovision.iam.rest.resources;
 
 public record UpdateUserResource(
         String username,
+        String email,
+        String imageUrl,
+        Integer age,
+        Integer height,
+        Integer weight,
         String password
 ) {
     public UpdateUserResource {

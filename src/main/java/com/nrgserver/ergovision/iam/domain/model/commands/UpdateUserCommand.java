@@ -2,6 +2,11 @@ package com.nrgserver.ergovision.iam.domain.model.commands;
 
 public record UpdateUserCommand(
         String username,
+        String email,
+        String imageUrl,
+        Integer age,
+        Integer height,
+        Integer weight,
         String password) {
     public UpdateUserCommand{
         if (username==null || username.isBlank() ) {
