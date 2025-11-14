@@ -30,7 +30,7 @@ public class AlertsSettingCommandServiceImpl implements AlertsSettingCommandServ
                 command.visualAlertsEnabled(),
                 command.soundAlertsEnabled(),
                 command.alertVolume(),
-                command.alertInterval()
+                command.pauseInterval()
         );
         
         AlertSetting savedSetting = alertSettingRepository.save(alertSetting);
@@ -40,14 +40,14 @@ public class AlertsSettingCommandServiceImpl implements AlertsSettingCommandServ
     @Override
     @Transactional
     public Long handle(UpdateAlertsSettingCommand command) {
-        AlertSetting alertSetting = alertSettingRepository.findById(command.settingId())
-                .orElseThrow(() -> new IllegalArgumentException("Alert setting not found with id: " + command.settingId()));
+        AlertSetting alertSetting = alertSettingRepository.findById(command.alertSettingId())
+                .orElseThrow(() -> new IllegalArgumentException("Alert setting not found with id: " + command.alertSettingId()));
         
         alertSetting.updateSettings(
                 command.visualAlertsEnabled(),
                 command.soundAlertsEnabled(),
                 command.alertVolume(),
-                command.alertInterval()
+                command.pauseInterval()
         );
         
         AlertSetting updatedSetting = alertSettingRepository.save(alertSetting);

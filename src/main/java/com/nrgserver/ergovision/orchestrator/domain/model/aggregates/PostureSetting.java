@@ -1,6 +1,5 @@
 package com.nrgserver.ergovision.orchestrator.domain.model.aggregates;
 
-import com.nrgserver.ergovision.orchestrator.domain.model.valueobjects.PostureThresholds;
 import com.nrgserver.ergovision.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -16,61 +15,32 @@ public class PostureSetting extends AuditableAbstractAggregateRoot<PostureSettin
     private Integer postureSensitivity;
     
     @Column(nullable = false)
-    private Integer shoulderAngleThreshold;
-    
-    @Column(nullable = false)
-    private Integer headAngleThreshold;
-    
-    @Column(nullable = false)
     private Integer samplingFrequency;
     
     @Column(nullable = false)
     private Boolean showSkeleton;
-    
-    @Embedded
-    private PostureThresholds postureThresholds;
     
     protected PostureSetting() {
     }
     
     public PostureSetting(Long userId) {
         this.userId = userId;
-        this.postureSensitivity = 50;
-        this.shoulderAngleThreshold = 15;
-        this.headAngleThreshold = 10;
+        this.postureSensitivity = 80;
         this.samplingFrequency = 1;
         this.showSkeleton = true;
-        this.postureThresholds = new PostureThresholds(15, 10, 20, 8);
     }
     
-    public PostureSetting(Long userId, Integer postureSensitivity, Integer shoulderAngleThreshold,
-                         Integer headAngleThreshold, Integer samplingFrequency, Boolean showSkeleton,
-                         PostureThresholds postureThresholds) {
+    public PostureSetting(Long userId, Integer postureSensitivity, Integer samplingFrequency, Boolean showSkeleton) {
         this.userId = userId;
         this.postureSensitivity = validateSensitivity(postureSensitivity);
-        this.shoulderAngleThreshold = validateAngleThreshold(shoulderAngleThreshold, "Shoulder");
-        this.headAngleThreshold = validateAngleThreshold(headAngleThreshold, "Head");
         this.samplingFrequency = validateSamplingFrequency(samplingFrequency);
         this.showSkeleton = showSkeleton;
-        this.postureThresholds = postureThresholds;
-        
-        if (postureThresholds != null && !postureThresholds.isValid()) {
-            throw new IllegalArgumentException("Invalid posture thresholds");
-        }
     }
     
     public void adjustSensitivity(Integer level) {
         this.postureSensitivity = validateSensitivity(level);
     }
-    
-    public void setShoulderThreshold(Integer angle) {
-        this.shoulderAngleThreshold = validateAngleThreshold(angle, "Shoulder");
-    }
-    
-    public void setHeadThreshold(Integer angle) {
-        this.headAngleThreshold = validateAngleThreshold(angle, "Head");
-    }
-    
+
     public void setSamplingFrequency(Integer freq) {
         this.samplingFrequency = validateSamplingFrequency(freq);
     }
@@ -83,21 +53,11 @@ public class PostureSetting extends AuditableAbstractAggregateRoot<PostureSettin
         this.showSkeleton = visible;
     }
     
-    public void updateSettings(Integer postureSensitivity, Integer shoulderAngleThreshold,
-                              Integer headAngleThreshold, Integer samplingFrequency, 
-                              Boolean showSkeleton, PostureThresholds postureThresholds) {
+    public void updateSettings(Integer postureSensitivity, Integer samplingFrequency,
+                              Boolean showSkeleton) {
         this.postureSensitivity = validateSensitivity(postureSensitivity);
-        this.shoulderAngleThreshold = validateAngleThreshold(shoulderAngleThreshold, "Shoulder");
-        this.headAngleThreshold = validateAngleThreshold(headAngleThreshold, "Head");
         this.samplingFrequency = validateSamplingFrequency(samplingFrequency);
         this.showSkeleton = showSkeleton;
-        
-        if (postureThresholds != null) {
-            if (!postureThresholds.isValid()) {
-                throw new IllegalArgumentException("Invalid posture thresholds");
-            }
-            this.postureThresholds = postureThresholds;
-        }
     }
     
     private Integer validateSensitivity(Integer sensitivity) {
@@ -105,13 +65,6 @@ public class PostureSetting extends AuditableAbstractAggregateRoot<PostureSettin
             throw new IllegalArgumentException("Posture sensitivity must be between 0 and 100");
         }
         return sensitivity;
-    }
-    
-    private Integer validateAngleThreshold(Integer angle, String type) {
-        if (angle == null || angle < 0 || angle > 90) {
-            throw new IllegalArgumentException(type + " angle threshold must be between 0 and 90 degrees");
-        }
-        return angle;
     }
     
     private Integer validateSamplingFrequency(Integer frequency) {

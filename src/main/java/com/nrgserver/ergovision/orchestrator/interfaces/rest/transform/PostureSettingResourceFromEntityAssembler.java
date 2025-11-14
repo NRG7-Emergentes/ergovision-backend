@@ -10,13 +10,8 @@ public class PostureSettingResourceFromEntityAssembler {
                 entity.getId(),
                 entity.getUserId(),
                 entity.getPostureSensitivity(),
-                entity.getShoulderAngleThreshold(),
-                entity.getHeadAngleThreshold(),
                 entity.getSamplingFrequency(),
-                entity.getShowSkeleton(),
-                PostureThresholdsResourceFromValueObjectAssembler.toResourceFromValueObject(
-                        entity.getPostureThresholds()
-                )
+                entity.getShowSkeleton()
         );
     }
 }

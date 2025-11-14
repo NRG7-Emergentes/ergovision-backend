@@ -28,11 +28,8 @@ public class PostureSettingCommandServiceImpl implements PostureSettingCommandSe
         PostureSetting postureSetting = new PostureSetting(
                 command.userId(),
                 command.postureSensitivity(),
-                command.shoulderAngleThreshold(),
-                command.headAngleThreshold(),
                 command.samplingFrequency(),
-                command.showSkeleton(),
-                command.postureThresholds()
+                command.showSkeleton()
         );
         
         PostureSetting savedSetting = postureSettingRepository.save(postureSetting);
@@ -42,16 +39,13 @@ public class PostureSettingCommandServiceImpl implements PostureSettingCommandSe
     @Override
     @Transactional
     public Long handle(UpdatePostureSettingCommand command) {
-        PostureSetting postureSetting = postureSettingRepository.findById(command.settingId())
-                .orElseThrow(() -> new IllegalArgumentException("Posture setting not found with id: " + command.settingId()));
+        PostureSetting postureSetting = postureSettingRepository.findById(command.postureSettingId())
+                .orElseThrow(() -> new IllegalArgumentException("Posture setting not found with id: " + command.postureSettingId()));
         
         postureSetting.updateSettings(
                 command.postureSensitivity(),
-                command.shoulderAngleThreshold(),
-                command.headAngleThreshold(),
                 command.samplingFrequency(),
-                command.showSkeleton(),
-                command.postureThresholds()
+                command.showSkeleton()
         );
         
         PostureSetting updatedSetting = postureSettingRepository.save(postureSetting);

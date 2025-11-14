@@ -4,10 +4,7 @@ public record PostureSettingResource(
         Long id,
         Long userId,
         Integer postureSensitivity,
-        Integer shoulderAngleThreshold,
-        Integer headAngleThreshold,
         Integer samplingFrequency,
-        Boolean showSkeleton,
-        PostureThresholdsResource postureThresholds
+        Boolean showSkeleton
 ) {
 }

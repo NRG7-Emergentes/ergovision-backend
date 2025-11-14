@@ -7,10 +7,15 @@ import com.nrgserver.ergovision.iam.domain.model.commands.DeleteUserCommand;
 import com.nrgserver.ergovision.iam.domain.model.commands.SignInCommand;
 import com.nrgserver.ergovision.iam.domain.model.commands.SignUpCommand;
 import com.nrgserver.ergovision.iam.domain.model.commands.UpdateUserCommand;
+import com.nrgserver.ergovision.iam.domain.model.events.UserCreatedEvent;
 import com.nrgserver.ergovision.iam.domain.services.UserCommandService;
 import com.nrgserver.ergovision.iam.infrastructure.persistence.jpa.repositories.RoleRepository;
 import com.nrgserver.ergovision.iam.infrastructure.persistence.jpa.repositories.UserRepository;
+import com.nrgserver.ergovision.orchestrator.domain.model.aggregates.PostureSetting;
+import com.nrgserver.ergovision.orchestrator.infrastructure.persistence.jpa.repositories.AlertSettingRepository;
+import com.nrgserver.ergovision.orchestrator.infrastructure.persistence.jpa.repositories.PostureSettingRepository;
 import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -22,12 +27,18 @@ public class UserCommandServiceImpl implements UserCommandService {
     private final RoleRepository roleRepository;
     private final HashingService hashingService;
     private final TokenService tokenService;
+    private final ApplicationEventPublisher eventPublisher;
 
-    public UserCommandServiceImpl(UserRepository userRepository, RoleRepository roleRepository, HashingService hashingService, TokenService tokenService) {
+    public UserCommandServiceImpl(UserRepository userRepository,
+                                  RoleRepository roleRepository,
+                                  HashingService hashingService,
+                                  TokenService tokenService,
+                                  ApplicationEventPublisher eventPublisher) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.hashingService = hashingService;
         this.tokenService = tokenService;
+        this.eventPublisher = eventPublisher;
     }
 
     @Override
@@ -119,6 +130,11 @@ public class UserCommandServiceImpl implements UserCommandService {
                 hashingService.encode(signUpCommand.password()),
                 roles);
         userRepository.save(user);
-        return userRepository.findByUsername(signUpCommand.username());
+
+        var newUser = userRepository.findByUsername(signUpCommand.username());
+
+        eventPublisher.publishEvent(new UserCreatedEvent(newUser,newUser.get().getId()));
+
+        return newUser;
     }
 }

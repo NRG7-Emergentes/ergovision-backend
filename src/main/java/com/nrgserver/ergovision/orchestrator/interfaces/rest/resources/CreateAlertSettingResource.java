@@ -19,8 +19,8 @@ public record CreateAlertSettingResource(
         @Max(value = 100, message = "Alert volume must be between 0 and 100")
         Integer alertVolume,
         
-        @NotNull(message = "Alert interval is required")
-        @Min(value = 1, message = "Alert interval must be at least 1 second")
-        Integer alertInterval
+        @NotNull(message = "Pause interval is required")
+        @Min(value = 1, message = "Pause interval must be at least 1 second")
+        Integer pauseInterval
 ) {
 }

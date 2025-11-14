@@ -9,13 +9,8 @@ public class UpdatePostureSettingCommandFromResourceAssembler {
         return new UpdatePostureSettingCommand(
                 settingId,
                 resource.postureSensitivity(),
-                resource.shoulderAngleThreshold(),
-                resource.headAngleThreshold(),
                 resource.samplingFrequency(),
-                resource.showSkeleton(),
-                PostureThresholdsResourceFromValueObjectAssembler.toValueObjectFromResource(
-                        resource.postureThresholds()
-                )
+                resource.showSkeleton()
         );
     }
 }

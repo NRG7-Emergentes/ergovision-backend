@@ -12,7 +12,7 @@ public class AlertSettingResourceFromEntityAssembler {
                 entity.getVisualAlertsEnabled(),
                 entity.getSoundAlertsEnabled(),
                 entity.getAlertVolume(),
-                entity.getAlertInterval()
+                entity.getPauseInterval()
         );
     }
 }

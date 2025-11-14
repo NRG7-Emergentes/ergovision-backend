@@ -11,7 +11,7 @@ public class UpdateAlertsSettingCommandFromResourceAssembler {
                 resource.visualAlertsEnabled(),
                 resource.soundAlertsEnabled(),
                 resource.alertVolume(),
-                resource.alertInterval()
+                resource.pauseInterval()
         );
     }
 }

@@ -21,7 +21,7 @@ public class AlertSetting extends AuditableAbstractAggregateRoot<AlertSetting> {
     private Integer alertVolume;
     
     @Column(nullable = false)
-    private Integer alertInterval;
+    private Integer pauseInterval;
     
     protected AlertSetting() {
     }
@@ -31,7 +31,7 @@ public class AlertSetting extends AuditableAbstractAggregateRoot<AlertSetting> {
         this.visualAlertsEnabled = true;
         this.soundAlertsEnabled = true;
         this.alertVolume = 50;
-        this.alertInterval = 30;
+        this.pauseInterval = 30;
     }
     
     public AlertSetting(Long userId, Boolean visualAlertsEnabled, Boolean soundAlertsEnabled, 
@@ -40,7 +40,7 @@ public class AlertSetting extends AuditableAbstractAggregateRoot<AlertSetting> {
         this.visualAlertsEnabled = visualAlertsEnabled;
         this.soundAlertsEnabled = soundAlertsEnabled;
         this.alertVolume = validateVolume(alertVolume);
-        this.alertInterval = validateInterval(alertInterval);
+        this.pauseInterval = validateInterval(alertInterval);
     }
     
     public void enableVisualAlerts() {
@@ -63,8 +63,8 @@ public class AlertSetting extends AuditableAbstractAggregateRoot<AlertSetting> {
         this.alertVolume = validateVolume(volume);
     }
     
-    public void setAlertInterval(Integer interval) {
-        this.alertInterval = validateInterval(interval);
+    public void setPauseInterval(Integer interval) {
+        this.pauseInterval = validateInterval(interval);
     }
     
     public void updateSettings(Boolean visualAlertsEnabled, Boolean soundAlertsEnabled, 
@@ -72,7 +72,7 @@ public class AlertSetting extends AuditableAbstractAggregateRoot<AlertSetting> {
         this.visualAlertsEnabled = visualAlertsEnabled;
         this.soundAlertsEnabled = soundAlertsEnabled;
         this.alertVolume = validateVolume(alertVolume);
-        this.alertInterval = validateInterval(alertInterval);
+        this.pauseInterval = validateInterval(alertInterval);
     }
     
     private Integer validateVolume(Integer volume) {

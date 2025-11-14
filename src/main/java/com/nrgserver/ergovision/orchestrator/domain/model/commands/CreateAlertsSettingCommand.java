@@ -5,6 +5,6 @@ public record CreateAlertsSettingCommand(
         Boolean visualAlertsEnabled,
         Boolean soundAlertsEnabled,
         Integer alertVolume,
-        Integer alertInterval
+        Integer pauseInterval
 ) {
 }

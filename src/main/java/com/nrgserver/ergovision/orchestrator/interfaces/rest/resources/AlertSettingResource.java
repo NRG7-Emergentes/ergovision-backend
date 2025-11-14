@@ -6,6 +6,6 @@ public record AlertSettingResource(
         Boolean visualAlertsEnabled,
         Boolean soundAlertsEnabled,
         Integer alertVolume,
-        Integer alertInterval
+        Integer pauseInterval
 ) {
 }
