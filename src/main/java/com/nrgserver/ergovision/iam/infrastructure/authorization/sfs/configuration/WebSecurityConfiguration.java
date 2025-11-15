@@ -6,6 +6,7 @@ import com.nrgserver.ergovision.iam.infrastructure.tokens.jwt.BearerTokenService
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
@@ -91,8 +92,12 @@ public class WebSecurityConfiguration {
                                 "/",
                                 "/index.html",
                                 "/favicon.ico",
-                                "/error"
+                                "/error",
+                                // SockJS transport endpoints (info, xhr, etc.)
+                                "/ws-notifications/**"
                         ).permitAll()
+                        // Allow preflight CORS requests globally
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
@@ -105,12 +110,19 @@ public class WebSecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of("*"));
+        // CHANGED: explicit origins (no '*') to allow credentials and satisfy browser when withCredentials=true
+        config.setAllowedOriginPatterns(List.of("http://localhost:4200", "http://10.0.2.2:8080"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("*"));
-        config.setAllowCredentials(false);
-
+        // CHANGED: explicit headers often sent by Angular/SockJS
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
+        // CHANGED: expose headers if needed by client
+        config.setExposedHeaders(List.of("Authorization"));
+        // CHANGED: allow credentials for SockJS XHR/info requests
+        config.setAllowCredentials(true);
+        // Optional: cache preflight
+        config.setMaxAge(3600L);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        // Apply to all endpoints (includes /ws-notifications/**)
         source.registerCorsConfiguration("/**", config);
         return source;
     }

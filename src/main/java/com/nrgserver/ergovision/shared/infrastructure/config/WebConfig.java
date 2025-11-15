@@ -17,14 +17,21 @@ public class WebConfig {
                 registry.addMapping("/api/**")
                         .allowedOrigins("http://localhost:4200", "http://10.0.2.2:8080")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
+                        .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin")
                         .allowCredentials(true);
 
                 // Also allow websocket handshake path used by SockJS endpoint (/ws)
                 registry.addMapping("/ws/**")
                         .allowedOrigins("http://localhost:4200", "http://10.0.2.2:8080")
                         .allowedMethods("GET", "POST", "OPTIONS")
-                        .allowedHeaders("*")
+                        .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin")
+                        .allowCredentials(true);
+
+                // WebSocket notifications endpoint
+                registry.addMapping("/ws-notifications/**")
+                        .allowedOrigins("http://localhost:4200", "http://10.0.2.2:8080")
+                        .allowedMethods("GET", "POST", "OPTIONS")
+                        .allowedHeaders("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin")
                         .allowCredentials(true);
             }
         };
