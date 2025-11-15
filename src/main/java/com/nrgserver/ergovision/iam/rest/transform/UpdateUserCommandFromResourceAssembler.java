@@ -7,12 +7,10 @@ import com.nrgserver.ergovision.iam.rest.resources.UpdateUserResource;
 public class UpdateUserCommandFromResourceAssembler {
     public static UpdateUserCommand toCommandFromResource(UpdateUserResource updateUserResource){
         return new UpdateUserCommand(
-                updateUserResource.username(),
                 updateUserResource.email(),
                 updateUserResource.imageUrl(),
                 updateUserResource.age(),
                 updateUserResource.height(),
-                updateUserResource.weight(),
-                updateUserResource.password());
+                updateUserResource.weight());
     }
 }

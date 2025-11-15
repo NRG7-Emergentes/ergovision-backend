@@ -76,13 +76,11 @@ public class User extends AuditableAbstractAggregateRoot<User> {
 
     //update
     public User updateUserDetails(UpdateUserCommand updateUserCommand){
-        this.username = updateUserCommand.username();
         this.email = updateUserCommand.email();
         this.imageUrl = updateUserCommand.imageUrl();
         this.age = updateUserCommand.age();
         this.height = updateUserCommand.height();
         this.weight = updateUserCommand.weight();
-        this.password = updateUserCommand.password();
 
         return this;
     }
