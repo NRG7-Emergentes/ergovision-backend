@@ -4,6 +4,7 @@ import com.nrgserver.ergovision.iam.infrastructure.authorization.sfs.pipeline.Be
 import com.nrgserver.ergovision.iam.infrastructure.hashing.bcrypt.BCryptHashingService;
 import com.nrgserver.ergovision.iam.infrastructure.tokens.jwt.BearerTokenService;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -23,6 +24,7 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -34,6 +36,9 @@ public class WebSecurityConfiguration {
     private final BearerTokenService tokenService;
     private final BCryptHashingService hashingService;
     private final AuthenticationEntryPoint unauthorizedRequestHandler;
+
+    @Value("${cors.allowed-origins}")
+    private String allowedOrigins;
 
     public WebSecurityConfiguration(
             @Qualifier("defaultUserDetailsService") UserDetailsService userDetailsService,
@@ -110,8 +115,9 @@ public class WebSecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        // CHANGED: explicit origins (no '*') to allow credentials and satisfy browser when withCredentials=true
-        config.setAllowedOriginPatterns(List.of("http://localhost:4200", "http://10.0.2.2:8080"));
+        // CHANGED: Read allowed origins from environment variable for flexible configuration
+        List<String> origins = Arrays.asList(allowedOrigins.split(","));
+        config.setAllowedOriginPatterns(origins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // CHANGED: explicit headers often sent by Angular/SockJS
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
