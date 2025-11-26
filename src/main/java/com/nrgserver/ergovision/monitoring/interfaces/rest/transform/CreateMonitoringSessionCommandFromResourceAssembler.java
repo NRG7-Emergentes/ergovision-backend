@@ -11,10 +11,11 @@ import java.time.format.DateTimeFormatter;
 public class CreateMonitoringSessionCommandFromResourceAssembler {
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
 
-    public static CreateMonitoringSessionCommand toCommandFromResource(CreateMonitoringSessionResource resource) {
+    public static CreateMonitoringSessionCommand toCommandFromResource(CreateMonitoringSessionResource resource, Long userId) {
         return new CreateMonitoringSessionCommand(
-                resource.startDate(),
-                resource.endDate(),
+                userId,
+                parseToInstant(resource.startDate()),
+                parseToInstant(resource.endDate()),
                 resource.score(),
                 resource.goodScore(),
                 resource.badScore(),

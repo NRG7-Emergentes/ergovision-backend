@@ -14,8 +14,8 @@ public class UpdateMonitoringSessionCommandFromResourceAssembler {
     public static UpdateMonitoringSessionCommand toCommandFromResource(Long monitoringSessionId, MonitoringSessionResource resource) {
         return new UpdateMonitoringSessionCommand(
                 monitoringSessionId,
-                resource.startDate(),
-                resource.endDate(),
+                parseToInstant(resource.startDate()),
+                parseToInstant(resource.endDate()),
                 resource.score(),
                 resource.goodScore(),
                 resource.badScore(),

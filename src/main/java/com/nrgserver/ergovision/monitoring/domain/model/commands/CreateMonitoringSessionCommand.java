@@ -1,11 +1,11 @@
 package com.nrgserver.ergovision.monitoring.domain.model.commands;
 
-
-import java.util.Date;
+import java.time.Instant;
 
 public record CreateMonitoringSessionCommand(
-        Date startDate,
-        Date endDate,
+        Long userId,
+        Instant startDate,
+        Instant endDate,
         Double score,
         Double goodScore,
         Double badScore,

@@ -17,8 +17,11 @@ import java.util.Date;
 @Table(name = "monitoring_session")
 public class MonitoringSession extends AuditableAbstractAggregateRoot<MonitoringSession> {
 
-    private Date startDate;
-    private Date endDate;
+    @Column(name = "user_id")
+    private Long userId;
+
+    private Instant startDate;
+    private Instant endDate;
     private Double score;
     private Double goodScore;
     private Double badScore;
@@ -31,6 +34,7 @@ public class MonitoringSession extends AuditableAbstractAggregateRoot<Monitoring
     public MonitoringSession() {}
 
     public MonitoringSession(CreateMonitoringSessionCommand command) {
+        this.userId = command.userId();
         this.startDate = command.startDate();
         this.endDate = command.endDate();
         this.score = command.score();
@@ -44,8 +48,8 @@ public class MonitoringSession extends AuditableAbstractAggregateRoot<Monitoring
     }
 
     public void updateMonitoringSessionInformation(
-            Date startDate,
-            Date endDate,
+            Instant startDate,
+            Instant endDate,
             Double score,
             Double goodScore,
             Double badScore,
