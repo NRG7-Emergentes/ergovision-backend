@@ -24,6 +24,6 @@ public class WebSocketNotificationController {
     @MessageMapping("/private")
     public void sendPrivate(String message, SimpMessageHeaderAccessor headerAccessor) {
         String userId = (String) headerAccessor.getSessionAttributes().get("userId");
-        notificationWebSocketService.sendPrivateMessage(userId, message);
+        notificationWebSocketService.sendPrivateNotification(userId, message);
     }
 }
