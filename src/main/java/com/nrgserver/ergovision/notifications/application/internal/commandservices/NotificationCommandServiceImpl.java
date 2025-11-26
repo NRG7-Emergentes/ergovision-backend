@@ -132,7 +132,7 @@ public class NotificationCommandServiceImpl {
             notificationRepository.save(n);
 
             // WS privado
-            webSocketService.sendPrivateMessage(String.valueOf(cmd.userId()), n);
+            webSocketService.sendPrivateNotification(String.valueOf(cmd.userId()), String.valueOf(n));
 
             NotificationSent sentRecord = new NotificationSent(
                     n.getUserId(),
