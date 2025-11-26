@@ -1,5 +1,6 @@
 package com.nrgserver.ergovision.notifications.application.websocket;
 
+import com.nrgserver.ergovision.notifications.domain.model.aggregates.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -23,4 +24,5 @@ public class NotificationWebSocketService {
     public void sendPrivateMessage(String userId, Object payload) {
         messagingTemplate.convertAndSendToUser(userId, "/queue/private", payload);
     }
+
 }
