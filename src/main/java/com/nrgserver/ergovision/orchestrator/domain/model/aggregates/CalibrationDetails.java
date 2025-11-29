@@ -3,7 +3,6 @@ package com.nrgserver.ergovision.orchestrator.domain.model.aggregates;
 import com.nrgserver.ergovision.shared.domain.model.aggregates.AuditableAbstractAggregateRoot;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jdk.jfr.Enabled;
 import lombok.Getter;
 import lombok.Setter;
 
