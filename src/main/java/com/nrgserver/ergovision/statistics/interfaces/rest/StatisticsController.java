@@ -77,15 +77,13 @@ public class StatisticsController {
         return ResponseEntity.ok(statisticsResource);
     }
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<StatisticsResource>> getByUserId(@PathVariable Long userId) {
+    public ResponseEntity<StatisticsResource> getByUserId(@PathVariable Long userId) {
         var getStatisticsByUserIdQuery = new GetStatisticsByUserIdQuery(userId);
         var optionalStatistics = this.statisticsQueryService.handle(getStatisticsByUserIdQuery);
         if (optionalStatistics.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        var statisticsResource = optionalStatistics.stream()
-                .map(StatisticsResourceFromEntityAssembler::toResourceFromEntity)
-                .toList();
+        var statisticsResource = StatisticsResourceFromEntityAssembler.toResourceFromEntity(optionalStatistics.get());
         return ResponseEntity.ok(statisticsResource);
     }
 }
