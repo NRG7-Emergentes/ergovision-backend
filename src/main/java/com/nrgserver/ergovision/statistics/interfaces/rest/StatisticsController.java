@@ -2,6 +2,7 @@ package com.nrgserver.ergovision.statistics.interfaces.rest;
 
 import com.nrgserver.ergovision.statistics.domain.model.commands.DeleteStatisticsCommand;
 import com.nrgserver.ergovision.statistics.domain.model.queries.GetStatisticsByIdQuery;
+import com.nrgserver.ergovision.statistics.domain.model.queries.GetStatisticsByUserIdQuery;
 import com.nrgserver.ergovision.statistics.domain.services.StatisticsCommandService;
 import com.nrgserver.ergovision.statistics.domain.services.StatisticsQueryService;
 import com.nrgserver.ergovision.statistics.interfaces.rest.resources.CreateStatisticsResource;
@@ -16,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "**",methods = {RequestMethod.GET,RequestMethod.POST,RequestMethod.PUT,RequestMethod.DELETE})
 @RestController
@@ -71,6 +74,18 @@ public class StatisticsController {
             return ResponseEntity.notFound().build();
         }
         var statisticsResource = StatisticsResourceFromEntityAssembler.toResourceFromEntity(optionalStatistics.get());
+        return ResponseEntity.ok(statisticsResource);
+    }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<StatisticsResource>> getByUserId(@PathVariable Long userId) {
+        var getStatisticsByUserIdQuery = new GetStatisticsByUserIdQuery(userId);
+        var optionalStatistics = this.statisticsQueryService.handle(getStatisticsByUserIdQuery);
+        if (optionalStatistics.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var statisticsResource = optionalStatistics.stream()
+                .map(StatisticsResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
         return ResponseEntity.ok(statisticsResource);
     }
 }

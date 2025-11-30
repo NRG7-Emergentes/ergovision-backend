@@ -2,6 +2,7 @@ package com.nrgserver.ergovision.statistics.aplication.internal.queryservices;
 
 import com.nrgserver.ergovision.statistics.domain.model.aggregates.Statistics;
 import com.nrgserver.ergovision.statistics.domain.model.queries.GetStatisticsByIdQuery;
+import com.nrgserver.ergovision.statistics.domain.model.queries.GetStatisticsByUserIdQuery;
 import com.nrgserver.ergovision.statistics.domain.services.StatisticsQueryService;
 import com.nrgserver.ergovision.statistics.infrastructure.persistence.jpa.repositories.StatisticsRepository;
 import org.springframework.stereotype.Service;
@@ -20,5 +21,10 @@ public class StatisticsQueryImpl implements StatisticsQueryService {
     @Override
     public Optional<Statistics> handle(GetStatisticsByIdQuery query) {
         return this.statisticsRepository.findById(query.statisticsId());
+    }
+
+    @Override
+    public Optional<Statistics> handle(GetStatisticsByUserIdQuery query) {
+        return this.statisticsRepository.findByUserId(query.userId());
     }
 }
