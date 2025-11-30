@@ -37,6 +37,7 @@ public class MonitoringSessionCommandImpl implements MonitoringSessionCommandSer
         }
         var monitoringSessionToUpdate = this.monitoringSessionRepository.findById(monitoringSessionId).get();
         monitoringSessionToUpdate.updateMonitoringSessionInformation(
+                command.userId(),
                 command.startDate(),
                 command.endDate(),
                 command.score(),
