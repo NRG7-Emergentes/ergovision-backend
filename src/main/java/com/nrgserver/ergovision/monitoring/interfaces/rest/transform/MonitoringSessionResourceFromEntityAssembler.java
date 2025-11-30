@@ -8,15 +8,12 @@ import java.time.format.DateTimeFormatter;
 
 public class MonitoringSessionResourceFromEntityAssembler {
 
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-            .withZone(ZoneId.systemDefault());
-
     public static MonitoringSessionResource toResourceFromEntity(MonitoringSession entity) {
         return new MonitoringSessionResource(
                 entity.getId(),
                 entity.getUserId(),
-                entity.getStartDate() != null ? FORMATTER.format(entity.getStartDate()) : null,
-                entity.getEndDate() != null ? FORMATTER.format(entity.getEndDate()) : null,
+                entity.getStartDate() ,
+                entity.getEndDate() ,
                 entity.getScore(),
                 entity.getGoodScore(),
                 entity.getBadScore(),

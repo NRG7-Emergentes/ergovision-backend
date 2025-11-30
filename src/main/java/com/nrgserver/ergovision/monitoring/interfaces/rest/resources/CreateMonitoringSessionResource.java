@@ -1,8 +1,10 @@
 package com.nrgserver.ergovision.monitoring.interfaces.rest.resources;
 
+import java.util.Date;
+
 public record CreateMonitoringSessionResource (
-        String startDate,
-        String endDate,
+        Date startDate,
+        Date endDate,
         Double score,
         Double goodScore,
         Double badScore,

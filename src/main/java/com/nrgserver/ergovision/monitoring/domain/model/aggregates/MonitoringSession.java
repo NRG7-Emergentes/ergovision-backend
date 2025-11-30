@@ -20,8 +20,8 @@ public class MonitoringSession extends AuditableAbstractAggregateRoot<Monitoring
     @Column(name = "user_id")
     private Long userId;
 
-    private Instant startDate;
-    private Instant endDate;
+    private Date startDate;
+    private Date endDate;
     private Double score;
     private Double goodScore;
     private Double badScore;
@@ -48,8 +48,8 @@ public class MonitoringSession extends AuditableAbstractAggregateRoot<Monitoring
     }
 
     public void updateMonitoringSessionInformation(
-            Instant startDate,
-            Instant endDate,
+            Date startDate,
+            Date endDate,
             Double score,
             Double goodScore,
             Double badScore,
