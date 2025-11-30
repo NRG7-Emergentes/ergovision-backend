@@ -16,6 +16,7 @@ import java.time.Instant;
 @Table(name = "monitoring_session")
 public class MonitoringSession extends AuditableAbstractAggregateRoot<MonitoringSession> {
 
+    private Long userId;
     private Instant startDate;
     private Instant endDate;
     private Double score;
@@ -30,6 +31,7 @@ public class MonitoringSession extends AuditableAbstractAggregateRoot<Monitoring
     public MonitoringSession() {}
 
     public MonitoringSession(CreateMonitoringSessionCommand command) {
+        this.userId = command.userId();
         this.startDate = command.startDate();
         this.endDate = command.endDate();
         this.score = command.score();
@@ -43,6 +45,7 @@ public class MonitoringSession extends AuditableAbstractAggregateRoot<Monitoring
     }
 
     public void updateMonitoringSessionInformation(
+            Long userId,
             Instant startDate,
             Instant endDate,
             Double score,
@@ -54,6 +57,7 @@ public class MonitoringSession extends AuditableAbstractAggregateRoot<Monitoring
             Integer numberOfPauses,
             Double averagePauseDuration
     ){
+        this.userId = userId;
         this.startDate = startDate;
         this.endDate = endDate;
         this.score = score;

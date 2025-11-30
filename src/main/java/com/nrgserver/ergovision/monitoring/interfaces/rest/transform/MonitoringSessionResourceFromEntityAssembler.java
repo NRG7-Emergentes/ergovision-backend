@@ -14,6 +14,7 @@ public class MonitoringSessionResourceFromEntityAssembler {
     public static MonitoringSessionResource toResourceFromEntity(MonitoringSession entity) {
         return new MonitoringSessionResource(
                 entity.getId(),
+                entity.getUserId(),
                 entity.getStartDate() != null ? FORMATTER.format(entity.getStartDate()) : null,
                 entity.getEndDate() != null ? FORMATTER.format(entity.getEndDate()) : null,
                 entity.getScore(),

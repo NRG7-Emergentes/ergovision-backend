@@ -4,6 +4,7 @@ import java.time.Instant;
 
 public record MonitoringSessionResource(
         Long id,
+        Long userId,
         String startDate,
         String endDate,
         Double score,

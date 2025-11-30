@@ -2,6 +2,7 @@ package com.nrgserver.ergovision.monitoring.interfaces.rest;
 
 import com.nrgserver.ergovision.monitoring.domain.model.commands.DeleteMonitoringSessionCommand;
 import com.nrgserver.ergovision.monitoring.domain.model.queries.GetMonitoringSessionByIdQuery;
+import com.nrgserver.ergovision.monitoring.domain.model.queries.GetMonitoringSessionByUserIdQuery;
 import com.nrgserver.ergovision.monitoring.domain.services.MonitoringSessionCommandService;
 import com.nrgserver.ergovision.monitoring.domain.services.MonitoringSessionQueryService;
 import com.nrgserver.ergovision.monitoring.interfaces.rest.resources.CreateMonitoringSessionResource;
@@ -76,5 +77,18 @@ public class MonitoringSessionController {
         }
         var monitoringSessionResource = MonitoringSessionResourceFromEntityAssembler.toResourceFromEntity(optionalMonitoringSession.get());
         return ResponseEntity.ok(monitoringSessionResource);
+    }
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<MonitoringSessionResource>> getByUserId(@PathVariable Long userId) {
+        var getMonitoringSessionByUserIdQuery = new GetMonitoringSessionByUserIdQuery(userId);
+        var monitoringSessions = this.monitoringSessionQueryService.handle(getMonitoringSessionByUserIdQuery);
+        if (monitoringSessions.isEmpty()) {
+            return ResponseEntity.notFound().build();
+
+        }
+        var monitoringSessionResources = monitoringSessions.stream()
+                .map(MonitoringSessionResourceFromEntityAssembler::toResourceFromEntity)
+                .toList();
+        return ResponseEntity.ok(monitoringSessionResources);
     }
 }

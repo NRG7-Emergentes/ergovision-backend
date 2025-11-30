@@ -4,6 +4,7 @@ import java.time.Instant;
 
 public record UpdateMonitoringSessionCommand(
         Long monitoringSessionId,
+        Long userId,
         Instant startDate,
         Instant endDate,
         Double score,

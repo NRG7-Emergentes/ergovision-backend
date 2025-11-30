@@ -13,6 +13,7 @@ public class CreateMonitoringSessionCommandFromResourceAssembler {
 
     public static CreateMonitoringSessionCommand toCommandFromResource(CreateMonitoringSessionResource resource) {
         return new CreateMonitoringSessionCommand(
+                resource.userId(),
                 parseToInstant(resource.startDate()),
                 parseToInstant(resource.endDate()),
                 resource.score(),
