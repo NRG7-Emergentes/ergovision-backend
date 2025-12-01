@@ -1,9 +1,6 @@
 package com.nrgserver.ergovision.statistics.aplication.internal.commandservices;
 
-import com.nrgserver.ergovision.statistics.domain.model.commands.CreateMonthlyProgressCommand;
-import com.nrgserver.ergovision.statistics.domain.model.commands.CreateOnlyMonthlyProgressCommand;
-import com.nrgserver.ergovision.statistics.domain.model.commands.DeleteMonthlyProgressCommand;
-import com.nrgserver.ergovision.statistics.domain.model.commands.UpdateMonthlyProgressCommand;
+import com.nrgserver.ergovision.statistics.domain.model.commands.*;
 import com.nrgserver.ergovision.statistics.domain.model.entities.MonthlyProgress;
 import com.nrgserver.ergovision.statistics.domain.services.MonthlyProgressCommandService;
 import com.nrgserver.ergovision.statistics.domain.services.StatisticsQueryService;
@@ -80,5 +77,17 @@ public class MonthlyProgressCommandImpl implements MonthlyProgressCommandService
             throw new IllegalArgumentException("ERROR WHILE DELETING MONTHLY PROGRESS: " + e.getMessage());
         }
 
+    }
+
+    @Override
+    public void handle(DeleteMonthlyProgressByStatisticsIdCommand command) {
+        if (!this.statisticsRepository.existsById(command.statisticsId())) {
+            throw new IllegalArgumentException("Statistics with ID " + command.statisticsId() + " does not exist.");
+        }
+        try {
+            this.monthlyProgressRepository.deleteMonthlyProgressByStatisticsId(command.statisticsId());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("ERROR WHILE DELETING MONTHLY PROGRESS BY STATISTICS ID: " + e.getMessage());
+        }
     }
 }
