@@ -1,5 +1,6 @@
 package com.nrgserver.ergovision.statistics.interfaces.rest;
 
+import com.nrgserver.ergovision.iam.infrastructure.authorization.sfs.model.UserDetailsImpl;
 import com.nrgserver.ergovision.statistics.domain.model.commands.DeleteStatisticsCommand;
 import com.nrgserver.ergovision.statistics.domain.model.queries.GetStatisticsByIdQuery;
 import com.nrgserver.ergovision.statistics.domain.model.queries.GetStatisticsByUserIdQuery;
@@ -16,6 +17,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +33,15 @@ public class StatisticsController {
     public StatisticsController(StatisticsCommandService statisticsCommandService, StatisticsQueryService statisticsQueryService) {
         this.statisticsCommandService = statisticsCommandService;
         this.statisticsQueryService = statisticsQueryService;
+    }
+
+    private Long getUserIdFromContext(){
+        var auth = SecurityContextHolder.getContext().getAuthentication();
+        var principal = auth.getPrincipal();
+        if (principal instanceof UserDetailsImpl userDetails) {
+            return userDetails.getId();
+        }
+        throw new RuntimeException("Invalid principal type");
     }
 
     @PostMapping
@@ -78,6 +89,17 @@ public class StatisticsController {
     }
     @GetMapping("/user/{userId}")
     public ResponseEntity<StatisticsResource> getByUserId(@PathVariable Long userId) {
+        var getStatisticsByUserIdQuery = new GetStatisticsByUserIdQuery(userId);
+        var optionalStatistics = this.statisticsQueryService.handle(getStatisticsByUserIdQuery);
+        if (optionalStatistics.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        var statisticsResource = StatisticsResourceFromEntityAssembler.toResourceFromEntity(optionalStatistics.get());
+        return ResponseEntity.ok(statisticsResource);
+    }
+    @GetMapping("/me")
+    public ResponseEntity<StatisticsResource> getMyStatistics(){
+        Long userId = getUserIdFromContext();
         var getStatisticsByUserIdQuery = new GetStatisticsByUserIdQuery(userId);
         var optionalStatistics = this.statisticsQueryService.handle(getStatisticsByUserIdQuery);
         if (optionalStatistics.isEmpty()) {
