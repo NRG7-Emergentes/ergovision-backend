@@ -3,6 +3,7 @@ package com.nrgserver.ergovision.statistics.aplication.internal.commandservices;
 import com.nrgserver.ergovision.statistics.domain.model.aggregates.Statistics;
 import com.nrgserver.ergovision.statistics.domain.model.commands.CreateStatisticsCommand;
 import com.nrgserver.ergovision.statistics.domain.model.commands.DeleteStatisticsCommand;
+import com.nrgserver.ergovision.statistics.domain.model.commands.DeletedStatisticsByUserIdCommand;
 import com.nrgserver.ergovision.statistics.domain.model.commands.UpdateStatisticsCommand;
 import com.nrgserver.ergovision.statistics.domain.services.StatisticsCommandService;
 import com.nrgserver.ergovision.statistics.infrastructure.persistence.jpa.repositories.DailyProgressRepository;
@@ -19,7 +20,9 @@ public class StatisticsCommandImpl implements StatisticsCommandService {
     private final MonthlyProgressRepository monthlyProgressRepository;
     private final DailyProgressRepository dailyProgressRepository;
 
-    public StatisticsCommandImpl(StatisticsRepository statisticsRepository, MonthlyProgressRepository monthlyProgressRepository, DailyProgressRepository dailyProgressRepository) {
+    public StatisticsCommandImpl(StatisticsRepository statisticsRepository,
+                                 MonthlyProgressRepository monthlyProgressRepository,
+                                 DailyProgressRepository dailyProgressRepository) {
         this.statisticsRepository = statisticsRepository;
         this.monthlyProgressRepository = monthlyProgressRepository;
         this.dailyProgressRepository = dailyProgressRepository;
@@ -48,7 +51,7 @@ public class StatisticsCommandImpl implements StatisticsCommandService {
         }
         var statisticsToUpdate = this.statisticsRepository.findById(statisticsId).get();
         statisticsToUpdate.updateStatisticsInformation(
-               // statisticsToUpdate.getUserId(), --Cuando fianlice la implementacion con Monitoring descomentar esta linea y borrar la de abajo para que el id del usuario no se pueda modificar
+                // statisticsToUpdate.getUserId(), --Cuando fianlice la implementacion con Monitoring descomentar esta linea y borrar la de abajo para que el id del usuario no se pueda modificar
                 command.userId(),
                 command.updateMonthlyProgressesCommand(),
                 command.updateDailyProgressesCommand(),
@@ -78,5 +81,21 @@ public class StatisticsCommandImpl implements StatisticsCommandService {
             throw new IllegalArgumentException("ERROR WHILE DELETING STATISTICS: " + e.getMessage());
         }
 
+    }
+
+    @Override
+    public void handle(DeletedStatisticsByUserIdCommand command) {
+        if (!this.statisticsRepository.existsByUserId(command.userId())){
+            throw new IllegalArgumentException("Statistics for user with id " + command.userId() + " does not exist");
+        }
+        try {
+            var statistics = this.statisticsRepository.findByUserId(command.userId()).get();
+            Long statisticsId = statistics.getId();
+            this.monthlyProgressRepository.deleteMonthlyProgressByStatisticsId(statisticsId);
+            this.dailyProgressRepository.deleteDailyProgressByStatisticsId(statisticsId);
+            this.statisticsRepository.deleteById(statisticsId);
+        } catch (Exception e){
+            throw new IllegalArgumentException("ERROR WHILE DELETING STATISTICS BY USER ID: " + e.getMessage());
+        }
     }
 }
