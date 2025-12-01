@@ -1,9 +1,6 @@
 package com.nrgserver.ergovision.statistics.aplication.internal.commandservices;
 
-import com.nrgserver.ergovision.statistics.domain.model.commands.CreateDailyProgressCommand;
-import com.nrgserver.ergovision.statistics.domain.model.commands.CreateOnlyDailyProgressCommand;
-import com.nrgserver.ergovision.statistics.domain.model.commands.DeleteDailyProgressCommand;
-import com.nrgserver.ergovision.statistics.domain.model.commands.UpdateDailyProgressCommand;
+import com.nrgserver.ergovision.statistics.domain.model.commands.*;
 import com.nrgserver.ergovision.statistics.domain.model.entities.DailyProgress;
 import com.nrgserver.ergovision.statistics.domain.services.DailyProgressCommandService;
 import com.nrgserver.ergovision.statistics.domain.services.MonthlyProgressQueryService;
@@ -79,5 +76,17 @@ public class DailyProgressCommandImpl implements DailyProgressCommandService {
             throw new IllegalArgumentException("ERROR WHILE DELETING DAILY PROGRESS: " + e.getMessage());
         }
 
+    }
+
+    @Override
+    public void handle(DeleteDailyProgressByStatisticsIdCommand command) {
+        if(!this.statisticsRepository.existsById(command.statisticsId())) {
+            throw new IllegalArgumentException("Statistics with ID " + command.statisticsId() + " does not exist.");
+        }
+        try {
+            this.dailyProgressRepository.deleteDailyProgressByStatisticsId(command.statisticsId());
+        } catch (Exception e) {
+            throw new IllegalArgumentException("ERROR WHILE DELETING DAILY PROGRESS BY STATISTICS ID: " + e.getMessage());
+        }
     }
 }
