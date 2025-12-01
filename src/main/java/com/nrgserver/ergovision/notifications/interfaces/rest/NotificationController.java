@@ -48,18 +48,15 @@ public class NotificationController {
         return ResponseEntity.ok(resources);
     }
 
-    // ✅ EXISTENTE: Obtener notificaciones por usuario (con filtros)
+    // ✅ EXISTENTE: Obtener notificaciones por usuario (solo userId requerido)
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<NotificationResource>> getUserNotifications(
-            @PathVariable Long userId,
-            @RequestParam(name = "status", required = false) String status,
-            @RequestParam(name = "type", required = false) String type
+            @PathVariable Long userId
     ) {
-        NotificationStatus statusFilter = parseStatus(status);
-        NotificationType typeFilter = parseType(type);
-
-        GetUserNotificationsQuery q = new GetUserNotificationsQuery(userId, statusFilter, typeFilter);
+        GetUserNotificationsQuery q = new GetUserNotificationsQuery(userId, null, null);
         List<Notification> list = queryService.handle(q);
+
+        if (list.isEmpty()) return ResponseEntity.noContent().build();
 
         List<NotificationResource> resources = list.stream()
                 .map(NotificationResourceFromEntityAssembler::toResourceFromEntity)
