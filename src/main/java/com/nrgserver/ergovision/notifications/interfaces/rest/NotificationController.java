@@ -48,18 +48,15 @@ public class NotificationController {
         return ResponseEntity.ok(resources);
     }
 
-    // ✅ EXISTENTE: Obtener notificaciones por usuario (con filtros)
+    // ✅ EXISTENTE: Obtener notificaciones por usuario (solo userId requerido)
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<NotificationResource>> getUserNotifications(
-            @PathVariable Long userId,
-            @RequestParam(name = "status", required = false) String status,
-            @RequestParam(name = "type", required = false) String type
+            @PathVariable Long userId
     ) {
-        NotificationStatus statusFilter = parseStatus(status);
-        NotificationType typeFilter = parseType(type);
-
-        GetUserNotificationsQuery q = new GetUserNotificationsQuery(userId, statusFilter, typeFilter);
+        GetUserNotificationsQuery q = new GetUserNotificationsQuery(userId, null, null);
         List<Notification> list = queryService.handle(q);
+
+        if (list.isEmpty()) return ResponseEntity.noContent().build();
 
         List<NotificationResource> resources = list.stream()
                 .map(NotificationResourceFromEntityAssembler::toResourceFromEntity)
@@ -110,16 +107,9 @@ public class NotificationController {
     // ✅ CORREGIDO: Crear y enviar notificación
     // POST /api/v1/notifications
     @PostMapping
-    public ResponseEntity<Map<String, Object>> sendNotification(@RequestBody CreateNotificationCommand req) {
-        // Validación básica
-        if (req.title() == null || req.title().trim().isEmpty()) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "status", "ERROR",
-                    "message", "El título de la notificación es obligatorio."
-            ));
-        }
+    public ResponseEntity<Map<String, Object>> sendNotification(
+            @RequestBody SendNotificationCommand cmd) {
 
-        SendNotificationCommand cmd = SendNotificationCommandFromEntityAssembler.toCommand(req);
         Long createdId = commandService.handle(cmd);
 
         Optional<Notification> created = queryService.getById(createdId);
@@ -128,7 +118,8 @@ public class NotificationController {
                     .body(Map.of("status", "ERROR", "message", "No se pudo crear la notificación."));
         }
 
-        NotificationResource resource = NotificationResourceFromEntityAssembler.toResourceFromEntity(created.get());
+        NotificationResource resource = NotificationResourceFromEntityAssembler
+                .toResourceFromEntity(created.get());
 
         Map<String, Object> response = new LinkedHashMap<>();
         response.put("status", "OK");
@@ -137,6 +128,7 @@ public class NotificationController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
 
     // EXISTENTE: Marcar como leída
     @PatchMapping("/{notificationId}/read")

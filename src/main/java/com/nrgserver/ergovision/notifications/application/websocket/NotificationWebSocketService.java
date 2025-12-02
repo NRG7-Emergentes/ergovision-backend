@@ -10,17 +10,30 @@ public class NotificationWebSocketService {
 
     private final SimpMessagingTemplate messagingTemplate;
 
+    /**
+     * Procesa mensajes entrantes (solo echo de prueba)
+     */
     public String processIncomingMessage(String message) {
         return "Echo: " + message;
     }
 
-    // Notifica a todos los suscriptores (broadcast)
+    /**
+     * Envía una notificación a todos los suscriptores (broadcast)
+     * ⚠️ Solo si quieres notificar globalmente
+     */
     public void broadcastNotification(Object payload) {
         messagingTemplate.convertAndSend("/topic/all", payload);
     }
 
-    // Envía una notificación a un usuario específico
-    public void sendPrivateMessage(String userId, Object payload) {
-        messagingTemplate.convertAndSendToUser(userId, "/queue/private", payload);
+    /**
+     * Envía una notificación privada a un usuario específico
+     */
+    public void sendPrivateNotification(String userId, String notification) {
+        // Usamos /queue/notifications para que cada usuario reciba solo sus mensajes
+        messagingTemplate.convertAndSendToUser(
+                userId,                  // id del usuario (string)
+                "/queue/notifications",  // canal privado
+                notification             // payload
+        );
     }
 }
